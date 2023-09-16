@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link href="style.css" rel="stylesheet" type="text/css">
+	<title>Space Shooter</title>
+	<style>
+      @font-face {
+          font-family: PressStart;
+          src: url(Font/PressStart2P-Regular.ttf);
+      }
+
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: PressStart, Helvetica, monospace;
+      }
+
+      body {
+          width: 100vw;
+          height: 100vh;
+          background: #fff;
+      }
+
+      #canvas {
+          border: 5px solid black;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 600px;
+          height: 100%;
+      }
+
+      img {
+          display: none;
+      }
+	</style>
+</head>
+
+<body>
+
+
+<canvas id="canvas"></canvas>
+<img id="ship" src="Sprites/ship.png" alt="Player's Space Ship">
+<img id="basicBolt" src="Sprites/laser-bolt.png" alt="laser bolt">
+<img id="enemyBasicBolt" src="Sprites/enemy-laser-bolt.png" alt="enemy laser bolt">
+<img id="explosion" src="Sprites/explosion.png" alt="explosion">
+
+<img id="enemySmall" src="Sprites/enemy-small.png" alt="Small Enemy">
+<img id="enemyMedium" src="Sprites/enemy-medium.png" alt="Medium Enemy">
+<img id="enemyBig" src="Sprites/enemy-big.png" alt="Big Enemy">
+
+<img id="coffee_layer1" src="Backgrounds/Coffee/stars.png" alt="Stars">
+<img id="coffee_layer2" src="Backgrounds/Coffee/dust.png" alt="Dust">
+<img id="coffee_layer3" src="Backgrounds/Coffee/planets.png" alt="Planets">
+
+<script src="main.js" type="module"></script>
+</body>
+</html>
