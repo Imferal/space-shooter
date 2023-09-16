@@ -1,10 +1,10 @@
 export class Explosion {
-  constructor(game, x, y) {
+  constructor(game, x, y, sizeModifier) {
     this.game = game;
     this.image = document.getElementById('explosion');
     this.spriteWidth = 64;
     this.sptiteHeight = 64;
-    this.sizeModifier = Math.random() + 0.5;
+    this.sizeModifier = (Math.random() * 0.2 + 0.2) * sizeModifier;
     this.width = this.spriteWidth * this.sizeModifier;
     this.height = this.sptiteHeight * this.sizeModifier;
     this.x = x - this.width * 0.5;

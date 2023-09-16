@@ -10,6 +10,7 @@ import {
   LeftUp,
 } from './shipStates.js';
 import {BasicBolt} from './bolts.js';
+import {Explosion} from './explosion.js';
 
 export class Ship {
   constructor(game) {
@@ -21,14 +22,14 @@ export class Ship {
     this.maxSpeed = 10;
     this.width = 64;
     this.height = 96;
+    this.explosionSize = 5;
     this.frameX = 0;
     this.frameY = 0;
     this.maxFrame = 1;
     this.fps = 20;
     this.frameInterval = 1000 / this.fps;
     this.frameTimer = 0;
-    this.shotDelay = 300;
-    this.shotTimer = 0;
+    this.shot = false;
     this.x = this.game.width * 0.5 - this.width * 0.5;
     this.y = this.game.height - this.height - 50;
     this.currentState = null;
@@ -54,6 +55,7 @@ export class Ship {
 
     this.setDirection(input);
     this.shooting(input, deltaTime);
+    this.checkCollisions()
 
     /** Boundaries */
     if (this.x < 0) this.x = 0;
@@ -142,12 +144,53 @@ export class Ship {
   }
   
   /** Shooting */
-  shooting(input, deltaTime) {
-    if (this.shotTimer > this.shotDelay) {
-      this.shotTimer = 0;
-      if (input.Space) {
-        this.game.bolts.push(new BasicBolt(this.game));
+  shooting() {
+    if (this.shot) {
+      this.shot = false;
+      this.game.bolts.push(new BasicBolt(this.game));
+    }
+  }
+
+  /** Collisions with enemies */
+  checkCollisions() {
+    this.game.enemies.forEach(enemy => {
+      if (
+        enemy.x < this.x + this.width &&
+        enemy.x + enemy.width > this.x &&
+        enemy.y < this.y + this.height &&
+        enemy.y + enemy.height > this.y
+      ) {
+        enemy.markedForDeletion = true;
+        this.game.explosions.push(
+          new Explosion(
+            this.game,
+            enemy.x + enemy.width * 0.5,
+            enemy.y + enemy.height * 0.5,
+            enemy.explosionSize,
+          ),
+        );
+        this.collisionHandler()
       }
-    } else this.shotTimer += deltaTime;
+    })
+  }
+
+  collisionHandler() {
+    this.markedForDeletion = true;
+    this.game.enemies = [];
+    this.game.enemyBolts = [];
+    this.game.explosions.push(
+      new Explosion(
+        this.game,
+        this.game.ship.x + this.game.ship.width * 0.5,
+        this.game.ship.y + this.game.ship.height * 0.5,
+        this.game.ship.explosionSize,
+      ),
+    );
+    this.game.lives--;
+    if (this.game.lives <= 0) this.game.gameOver = true;
+    else {
+      this.game.ship = new Ship(this.game);
+      this.game.ship.currentState = new Stop(this.game);
+    }
   }
 }

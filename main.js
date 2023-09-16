@@ -23,6 +23,7 @@ window.addEventListener('load', () => {
 
       this.enemies = [];
       this.bolts = [];
+      this.enemyBolts = [];
       this.explosions = [];
 
       this.enemyTimer = 0;
@@ -59,12 +60,23 @@ window.addEventListener('load', () => {
       this.enemies = this.enemies.filter(
         enemy => !enemy.markedForDeletion
       )
-      
+
+      /** Ship */
+      this.ship.update(this.input.keys, deltaTime);
+
       /** Bolts */
       this.bolts.forEach(bolt => {
         bolt.update(deltaTime)
       })
       this.bolts = this.bolts.filter(
+        bolt => !bolt.markedForDeletion
+      )
+      
+      /** Enemy Bolts */
+      this.enemyBolts.forEach(bolt => {
+        bolt.update(deltaTime)
+      })
+      this.enemyBolts = this.enemyBolts.filter(
         bolt => !bolt.markedForDeletion
       )
       
@@ -75,9 +87,6 @@ window.addEventListener('load', () => {
       this.explosions = this.explosions.filter(
         explosion => !explosion.markedForDeletion
       )
-      
-      /** Ship */
-      this.ship.update(this.input.keys, deltaTime); 
     }
 
     draw(context) {
@@ -89,8 +98,16 @@ window.addEventListener('load', () => {
         enemy.draw(context);
       })
 
+      /** Ship */
+      this.ship.draw(context)
+
       /** Bolts */
       this.bolts.forEach(bolt => {
+        bolt.draw(context);
+      })
+
+      /** Enemy Bolts */
+      this.enemyBolts.forEach(bolt => {
         bolt.draw(context);
       })
 
@@ -98,19 +115,15 @@ window.addEventListener('load', () => {
       this.explosions.forEach(explosion => {
         explosion.draw(context)
       })
-
-      /** Ship */
-      this.ship.draw(context)
       
       /** UI */
       this.ui.draw(context);
     }
 
     addEnemy() {
-      if (Math.random() > 0.4) this.enemies.push(new EnemySmall(this))
-      if (Math.random() > 0.8) this.enemies.push(new EnemyMedium(this))
-      // this.enemies.push(new EnemyMedium(this))
-      if (Math.random() > 0.95) this.enemies.push(new EnemyBig(this))
+      if (Math.random() > 0.2) this.enemies.push(new EnemySmall(this, 2000))
+      if (Math.random() > 0.6) this.enemies.push(new EnemyMedium(this, 1800))
+      if (Math.random() > 0.85) this.enemies.push(new EnemyBig(this, 1200))
     }
   }
 

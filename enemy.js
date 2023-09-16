@@ -1,3 +1,5 @@
+import { EnemyBasicBolt } from './bolts.js';
+
 class Enemy {
   constructor() {
     this.frameX = 0;
@@ -17,6 +19,11 @@ class Enemy {
     this.speedY = null;
     this.angle = null;
     this.angleSpeed = null;
+    this.shotCooldown = null;
+    this.shootTimer = null;
+    this.explosionSize = null;
+    this.lives = null;
+    this.score = null;
   }
 
   update(deltaTime) {
@@ -44,10 +51,17 @@ class Enemy {
       this.angleSpeed = -this.angleSpeed;
     }
 
+    /** Shooting */
+    this.shooting(deltaTime);
+
     if (this.y > this.game.height) this.markedForDeletion = true;
   }
 
   draw(context) {
+    if (this.game.debug) {
+      context.fillStyle = 'white';
+      context.fillRect(this.x, this.y, this.width, this.height);
+    }
     context.drawImage(
       this.image,
       this.frameX * this.width,
@@ -60,12 +74,20 @@ class Enemy {
       this.height,
     );
   }
+  
+  shooting(deltaTime) {
+    if (this.shootTimer > this.shotCooldown) {
+      this.shootTimer = 0;
+      this.game.enemyBolts.push(new EnemyBasicBolt(this.game, this));
+    } else this.shootTimer += deltaTime;
+  }
 }
 
 export class EnemySmall extends Enemy {
-  constructor(game) {
+  constructor(game, shotCooldown) {
     super();
     this.game = game;
+    this.shotCooldown = shotCooldown;
     this.width = 64;
     this.height = 64;
     this.x = Math.random() * this.game.width - this.width * 0.5;
@@ -74,6 +96,10 @@ export class EnemySmall extends Enemy {
     this.speedY = 5;
     this.maxFrame = 1;
     this.image = document.getElementById('enemySmall');
+    this.shootTimer = 0;
+    this.explosionSize = 2;
+    this.lives = 1;
+    this.score = 5;
 
     this.angle = 0;
     this.angleSpeed = Math.random() * 2 - 1;
@@ -94,9 +120,10 @@ export class EnemySmall extends Enemy {
 }
 
 export class EnemyMedium extends Enemy {
-  constructor(game) {
+  constructor(game, shotCooldown) {
     super();
     this.game = game;
+    this.shotCooldown = shotCooldown;
     this.width = 128;
     this.height = 64;
     this.x = 0;
@@ -105,6 +132,10 @@ export class EnemyMedium extends Enemy {
     this.speedY = 1;
     this.maxFrame = 1;
     this.image = document.getElementById('enemyMedium');
+    this.shootTimer = 0;
+    this.explosionSize = 4;
+    this.lives = 3;
+    this.score = 20;
 
     this.angle = 0.12;
     this.angleSpeed = 2;
@@ -129,9 +160,10 @@ export class EnemyMedium extends Enemy {
 }
 
 export class EnemyBig extends Enemy {
-  constructor(game) {
+  constructor(game, shotCooldown) {
     super();
     this.game = game;
+    this.shotCooldown = shotCooldown;
     this.width = 104;
     this.height = 120;
     this.x = Math.random() * this.game.width - this.width * 0.5;
@@ -140,16 +172,21 @@ export class EnemyBig extends Enemy {
     this.speedY = Math.random() * 0.2 + 0.2;
     this.maxFrame = 1;
     this.image = document.getElementById('enemyBig');
+    this.shootTimer = 0;
+    this.explosionSize = 8;
+    this.lives = 20;
+    this.score = 100;
   }
 
   update(deltaTime) {
     super.update(deltaTime);
-
-    // this.x += 4 * Math.sin(this.angle * Math.PI / 180);
   }
 
   draw(context) {
-    if (this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
+    if (this.game.debug) {
+      context.fillStyle = 'white';
+      context.fillRect(this.x, this.y, this.width, this.height);
+    }
     super.draw(context);
   }
 }

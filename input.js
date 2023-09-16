@@ -10,6 +10,10 @@ export class InputHandler {
       Space: false,
     };
 
+    window.addEventListener('keypress', e => {
+      if (e.code === 'Space') this.game.ship.shot = true;
+    })
+
     window.addEventListener('keydown', e => {
       /** Если клавиша нажата и не находится в массиве keys - добавляем её туда */
       this.keys[e.code] = true;
