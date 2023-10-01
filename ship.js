@@ -44,7 +44,6 @@ export class Ship {
       new DownLeft(this.game),
       new LeftUp(this.game),
     ]
-
   }
 
   update(input, deltaTime) {
@@ -187,7 +186,10 @@ export class Ship {
       ),
     );
     this.game.lives--;
-    if (this.game.lives <= 0) this.game.gameOver = true;
+    if (this.game.lives <= 0) {
+      this.game.gameOver = true;
+      this.game.gameOverInProgress = true;
+    }
     else {
       this.game.ship = new Ship(this.game);
       this.game.ship.currentState = new Stop(this.game);

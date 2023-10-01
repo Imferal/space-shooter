@@ -84,13 +84,15 @@ class Enemy {
 }
 
 export class EnemySmall extends Enemy {
-  constructor(game, shotCooldown) {
+  constructor(game, shotCooldown, trajectory, x,) {
     super();
     this.game = game;
     this.shotCooldown = shotCooldown;
+    this.trajectory = trajectory;
+
     this.width = 64;
     this.height = 64;
-    this.x = Math.random() * this.game.width - this.width * 0.5;
+    this.x = x * this.game.width - this.width * 0.5;
     this.y = -this.height;
     this.speedX = 0;
     this.speedY = 5;
@@ -120,13 +122,15 @@ export class EnemySmall extends Enemy {
 }
 
 export class EnemyMedium extends Enemy {
-  constructor(game, shotCooldown) {
+  constructor(game, shotCooldown, trajectory, x,) {
     super();
     this.game = game;
     this.shotCooldown = shotCooldown;
+    this.trajectory = trajectory;
+
     this.width = 128;
     this.height = 64;
-    this.x = 0;
+    this.x = x * this.game.width - this.width * 0.5;
     this.y = -this.height;
     this.speedX = 0;
     this.speedY = 1;
@@ -160,13 +164,15 @@ export class EnemyMedium extends Enemy {
 }
 
 export class EnemyBig extends Enemy {
-  constructor(game, shotCooldown) {
+  constructor(game, shotCooldown, trajectory, x,) {
     super();
     this.game = game;
     this.shotCooldown = shotCooldown;
+    this.trajectory = trajectory;
+
     this.width = 104;
     this.height = 120;
-    this.x = Math.random() * this.game.width - this.width * 0.5;
+    this.x = x * this.game.width - this.width * 0.5;
     this.y = -this.height;
     this.speedX = 0;
     this.speedY = Math.random() * 0.2 + 0.2;

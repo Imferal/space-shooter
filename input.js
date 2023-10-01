@@ -11,7 +11,10 @@ export class InputHandler {
     };
 
     window.addEventListener('keypress', e => {
-      if (e.code === 'Space') this.game.ship.shot = true;
+      if (e.code === 'Space') {
+        if (!this.game.gameOver) this.game.ship.shot = true;
+        else if (!this.game.gameOverInProgress) this.game.resetGame();
+      }
     })
 
     window.addEventListener('keydown', e => {
