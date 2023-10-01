@@ -37,6 +37,7 @@ window.addEventListener('load', () => {
       this.score = 0;
       this.gameTimer = 0;
       this.level = 0;
+      this.wave = 0;
 
       this.gameOverMaxDelay = 3000;
       this.gameOverDelay = this.gameOverMaxDelay;

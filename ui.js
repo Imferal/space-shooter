@@ -20,12 +20,16 @@ export class UI {
   }
 
   draw(context) {
-    context.font = this.fontSize + 'px ' + this.fontFamily;
     context.textAlign = 'left';
     context.fillStyle = this.fontColor;
 
     /** Scores */
+    context.font = this.fontSize + 'px ' + this.fontFamily;
     context.fillText('Score: ' + this.game.score, 20, 40);
+
+    /** Waves */
+    context.font = this.fontSize * 0.5 + 'px ' + this.fontFamily;
+    context.fillText('Wave: ' + this.game.wave, 20, 70);
 
     /** Lives */
     for (let i = 0; i < this.game.lives; i++) {

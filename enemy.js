@@ -18,17 +18,28 @@ class Enemy {
     this.speedX = null;
     this.speedY = null;
     this.angle = null;
+    this.curve = null;
     this.angleSpeed = null;
     this.shotCooldown = null;
     this.shootTimer = null;
     this.explosionSize = null;
     this.lives = null;
     this.score = null;
+    this.trajectory = null;
   }
 
   update(deltaTime) {
     this.x -= this.speedX;
     this.y += this.speedY;
+
+    switch (this.trajectory) {
+      case 'sideToSide':
+        this.fromSideToSideMovement(deltaTime);
+        break;
+      case 'spiral':
+        this.spiralMovement(deltaTime);
+        break;
+    }
 
     /** Animation */
     if (this.frameTimer > this.frameInterval) {
@@ -81,6 +92,42 @@ class Enemy {
       this.game.enemyBolts.push(new EnemyBasicBolt(this.game, this));
     } else this.shootTimer += deltaTime;
   }
+  
+  initTrajectory(trajectoryType, x) {
+    switch (trajectoryType) {
+      case 'straight': {
+        this.x = Math.random() * this.game.width - this.width * 0.5;
+        break;
+      }
+
+      case 'spiral': {
+        this.x = x * this.game.width - this.width * 0.5;
+        this.angle = 0.12;
+        this.angleSpeed = 2;
+        this.curve = 4;
+        break;
+      }
+
+      case 'sideToSide': {
+        this.x = x * this.game.width - this.width * 0.5;
+        this.angle = 0.12;
+        this.angleSpeed = 2;
+        this.curve = 4;
+        break;
+      }
+    }
+  }
+
+  fromSideToSideMovement() {
+    this.angle += this.angleSpeed;
+    this.x += this.curve * Math.sin(this.angle * Math.PI / 360);
+    this.y += this.curve * Math.sin(this.angle * Math.PI );
+  }
+
+  spiralMovement() {
+    this.angle += this.angleSpeed;
+    this.x += 4 * Math.sin(this.angle * Math.PI / 180);
+  }
 }
 
 export class EnemySmall extends Enemy {
@@ -92,27 +139,21 @@ export class EnemySmall extends Enemy {
 
     this.width = 64;
     this.height = 64;
-    this.x = x * this.game.width - this.width * 0.5;
     this.y = -this.height;
     this.speedX = 0;
     this.speedY = 5;
     this.maxFrame = 1;
     this.image = document.getElementById('enemySmall');
-    this.shootTimer = 0;
+    this.shootTimer = Math.random() * this.shotCooldown;
     this.explosionSize = 2;
     this.lives = 1;
     this.score = 5;
 
-    this.angle = 0;
-    this.angleSpeed = Math.random() * 2 - 1;
-    this.curve = Math.random() * 3
+    this.initTrajectory(trajectory, x);
   }
 
   update(deltaTime) {
     super.update(deltaTime);
-
-    this.angle += this.angleSpeed;
-    this.x += 4 * Math.sin(this.angle * Math.PI / 180);
   }
 
   draw(context) {
@@ -130,28 +171,21 @@ export class EnemyMedium extends Enemy {
 
     this.width = 128;
     this.height = 64;
-    this.x = x * this.game.width - this.width * 0.5;
     this.y = -this.height;
     this.speedX = 0;
     this.speedY = 1;
     this.maxFrame = 1;
     this.image = document.getElementById('enemyMedium');
-    this.shootTimer = 0;
+    this.shootTimer = Math.random() * this.shotCooldown;
     this.explosionSize = 4;
     this.lives = 3;
     this.score = 20;
 
-    this.angle = 0.12;
-    this.angleSpeed = 2;
-    this.curve = 4;
+    this.initTrajectory(trajectory, x);
   }
 
   update(deltaTime) {
     super.update(deltaTime);
-
-    this.angle += this.angleSpeed;
-    this.x += this.curve * Math.sin(this.angle * Math.PI / 360);
-    this.y += this.curve * Math.sin(this.angle * Math.PI );
   }
 
   draw(context) {
@@ -164,7 +198,7 @@ export class EnemyMedium extends Enemy {
 }
 
 export class EnemyBig extends Enemy {
-  constructor(game, shotCooldown, trajectory, x,) {
+  constructor(game, shotCooldown, trajectory, x) {
     super();
     this.game = game;
     this.shotCooldown = shotCooldown;
@@ -172,16 +206,17 @@ export class EnemyBig extends Enemy {
 
     this.width = 104;
     this.height = 120;
-    this.x = x * this.game.width - this.width * 0.5;
     this.y = -this.height;
     this.speedX = 0;
     this.speedY = Math.random() * 0.2 + 0.2;
     this.maxFrame = 1;
     this.image = document.getElementById('enemyBig');
-    this.shootTimer = 0;
+    this.shootTimer = Math.random() * this.shotCooldown;
     this.explosionSize = 8;
     this.lives = 20;
     this.score = 100;
+
+    this.initTrajectory(trajectory, x);
   }
 
   update(deltaTime) {
