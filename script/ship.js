@@ -19,7 +19,7 @@ export class Ship {
     this.image = document.getElementById('ship');
     this.vy = 0;
     this.vx = 0;
-    this.maxSpeed = 10;
+    this.maxSpeed = 14;
     this.width = 64;
     this.height = 96;
     this.explosionSize = 5;
@@ -199,6 +199,8 @@ export class Ship {
     else {
       this.game.createNewShip()
     }
+    /** Repeat last waves after death */
+    this.game.enemySpawner.rollBackWaves()    
   }
 
   newLiveBlinking(deltaTime) {

@@ -87,10 +87,12 @@ class Enemy {
   }
   
   shooting(deltaTime) {
-    if (this.shootTimer > this.shotCooldown) {
-      this.shootTimer = 0;
-      this.game.enemyBolts.push(new EnemyBasicBolt(this.game, this));
-    } else this.shootTimer += deltaTime;
+    if (this.shootTimer) {
+      if (this.shootTimer > this.shotCooldown) {
+        this.shootTimer = 0;
+        this.game.enemyBolts.push(new EnemyBasicBolt(this.game, this));
+      } else this.shootTimer += deltaTime;
+    }
   }
   
   initTrajectory(trajectoryType, x) {
@@ -144,7 +146,7 @@ export class EnemySmall extends Enemy {
     this.speedY = 5;
     this.maxFrame = 1;
     this.image = document.getElementById('enemySmall');
-    this.shootTimer = Math.random() * this.shotCooldown;
+    this.shootTimer = this.shotCooldown ? Math.random() * this.shotCooldown : null;
     this.explosionSize = 2;
     this.lives = 1;
     this.score = 5;

@@ -1,9 +1,9 @@
-import { Ship } from './ship.js';
-import { InputHandler } from './input.js';
-import { Background } from './background.js';
-import { UI } from './ui.js';
-import { EnemySpawner } from './enemySpawner.js';
-import {Stop} from './shipStates.js';
+import { Ship } from './script/ship.js';
+import { InputHandler } from './script/input.js';
+import { Background } from './script/background.js';
+import { UI } from './script/ui.js';
+import { EnemySpawner } from './script/enemySpawner.js';
+import {Stop} from './script/shipStates.js';
 
 window.addEventListener('load', () => {
   const canvas = document.getElementById('canvas');
@@ -28,15 +28,17 @@ window.addEventListener('load', () => {
       this.enemyBolts = [];
       this.explosions = [];
 
-      this.speed = 4;
-      this.maxSpeed = 4;
+      this.speed = 12;
+      this.maxSpeed = 12;
       this.gameOver = false;
       this.debug = false;
 
-      this.maxLives = 10;
+      this.maxLives = 3;
       this.lives = this.maxLives;
       this.score = 0;
-      this.gameTimer = 0;
+      this.levelTimer = 0;
+      this.delayAfterDeath = 3000;
+      this.rollBackWavesNumber = 1;
       this.level = 0;
       this.wave = 0;
 
@@ -52,7 +54,7 @@ window.addEventListener('load', () => {
     }
 
     update(deltaTime) {
-      this.gameTimer += deltaTime;
+      this.levelTimer += deltaTime;
       if (this.gameOver) {
         if (this.gameOverDelay > 0) {
           this.gameOverDelay -= deltaTime;
@@ -152,9 +154,12 @@ window.addEventListener('load', () => {
       this.enemyBolts = [];
       this.explosions = [];
       this.lives = this.maxLives;
-      this.score = 0;
       this.gameOverDelay = this.gameOverMaxDelay;
-      this.gameTimer = 0;
+      this.level = 0;
+      this.wave = 0;
+      this.score = 0;
+      this.levelTimer = 0;
+      this.enemySpawner.resetLevels()
     }
     
     createNewShip(){

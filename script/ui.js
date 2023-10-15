@@ -27,10 +27,6 @@ export class UI {
     context.font = this.fontSize + 'px ' + this.fontFamily;
     context.fillText('Score: ' + this.game.score, 20, 40);
 
-    /** Waves */
-    context.font = this.fontSize * 0.5 + 'px ' + this.fontFamily;
-    context.fillText('Wave: ' + this.game.wave, 20, 70);
-
     /** Lives */
     for (let i = 0; i < this.game.lives; i++) {
       context.drawImage(this.livesImage,
@@ -44,6 +40,15 @@ export class UI {
         36,
       );
     }
+
+    /** Level */
+    context.font = this.fontSize * 0.5 + 'px ' + this.fontFamily;
+    context.fillText('Level: ' + (this.game.level + 1), 20, this.game.height - 20);
+
+    /** Wave */
+    context.font = this.fontSize * 0.5 + 'px ' + this.fontFamily;
+    context.textAlign = 'right';
+    context.fillText('Wave: ' + (this.game.wave + 1), this.game.width - 20, this.game.height - 20);
 
     /** Game Over */
     if (this.game.gameOver && !this.game.gameOverInProgress) {
@@ -65,7 +70,7 @@ export class UI {
       context.fillText('Bolts: ' + this.game.bolts.length, 20, this.game.height - 40);
       context.fillText('EnemyBolts: ' + this.game.enemyBolts.length, 20, this.game.height - 60);
       context.fillText('Explosions: ' + this.game.explosions.length, 20, this.game.height - 80);
-      context.fillText('GameTimer: ' + this.game.gameTimer, 20, this.game.height - 100);
+      context.fillText('GameTimer: ' + this.game.levelTimer, 20, this.game.height - 100);
     }
   }
 }
