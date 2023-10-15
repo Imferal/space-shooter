@@ -3,6 +3,7 @@ import { InputHandler } from './input.js';
 import { Background } from './background.js';
 import { UI } from './ui.js';
 import { EnemySpawner } from './enemySpawner.js';
+import {Stop} from './shipStates.js';
 
 window.addEventListener('load', () => {
   const canvas = document.getElementById('canvas');
@@ -39,6 +40,7 @@ window.addEventListener('load', () => {
       this.level = 0;
       this.wave = 0;
 
+      this.newLiveInProgress = true;
       this.gameOverMaxDelay = 3000;
       this.gameOverDelay = this.gameOverMaxDelay;
       this.gameOverInProgress = false;
@@ -57,6 +59,10 @@ window.addEventListener('load', () => {
         } else {
           this.gameOverInProgress = false;
         }
+      }
+
+      if (this.newLiveInProgress) {
+        this.ship.newLiveBlinking(deltaTime);
       }
 
       /** Background */
@@ -136,7 +142,7 @@ window.addEventListener('load', () => {
       /** UI */
       this.ui.draw(context);
     }
-    
+
     resetGame() {
       this.gameOver = false;
       this.gameOverInProgress = false;
@@ -150,8 +156,13 @@ window.addEventListener('load', () => {
       this.gameOverDelay = this.gameOverMaxDelay;
       this.gameTimer = 0;
     }
+    
+    createNewShip(){
+      this.ship.resetShip();
+      this.ship.currentState = new Stop(this);
+      this.newLiveInProgress = true;
+    }
   }
-
 
   const game = new Game(canvas.width, canvas.height);
   let lastTime = 0;

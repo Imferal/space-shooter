@@ -23,15 +23,15 @@ export class Ship {
     this.width = 64;
     this.height = 96;
     this.explosionSize = 5;
-    this.frameX = 0;
-    this.frameY = 0;
-    this.maxFrame = 1;
     this.fps = 20;
     this.frameInterval = 1000 / this.fps;
     this.frameTimer = 0;
     this.shot = false;
-    this.x = this.game.width * 0.5 - this.width * 0.5;
-    this.y = this.game.height - this.height - 50;
+    this.invulnerableBlinkMaxTime = 200;
+    this.invulnerableMaxTime = 2400;
+    
+    this.resetShip()
+
     this.currentState = null;
     this.states = [
       new Stop(this.game),
@@ -53,8 +53,11 @@ export class Ship {
     this.y += this.vy;
 
     this.setDirection(input);
-    this.shooting(input, deltaTime);
-    this.checkCollisions()
+    
+    if (!this.invulnerable) {
+      this.shooting(input, deltaTime);
+      this.checkCollisions(deltaTime);
+    }
 
     /** Boundaries */
     if (this.x < 0) this.x = 0;
@@ -85,17 +88,20 @@ export class Ship {
       context.fillStyle = 'white';
       context.fillRect(this.x, this.y, this.width, this.height);
     }
-    context.drawImage(
-      this.image,
-      this.width * this.frameX,
-      this.height * this.frameY,
-      this.width,
-      this.height,
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-    );
+
+    if (!this.invisible) {
+      context.drawImage(
+        this.image,
+        this.width * this.frameX,
+        this.height * this.frameY,
+        this.width,
+        this.height,
+        this.x,
+        this.y,
+        this.width,
+        this.height,
+      );
+    }
   }
 
   /** Change state */
@@ -151,7 +157,7 @@ export class Ship {
   }
 
   /** Collisions with enemies */
-  checkCollisions() {
+  checkCollisions(deltaTime) {
     this.game.enemies.forEach(enemy => {
       if (
         enemy.x < this.x + this.width &&
@@ -168,7 +174,7 @@ export class Ship {
             enemy.explosionSize,
           ),
         );
-        this.collisionHandler()
+        this.collisionHandler(deltaTime)
       }
     })
   }
@@ -191,8 +197,38 @@ export class Ship {
       this.game.gameOverInProgress = true;
     }
     else {
-      this.game.ship = new Ship(this.game);
-      this.game.ship.currentState = new Stop(this.game);
+      this.game.createNewShip()
     }
+  }
+
+  newLiveBlinking(deltaTime) {
+    if (this.invulnerableBlinkTime <= 0) {
+      this.invulnerableBlinkTime = this.invulnerableBlinkMaxTime;
+      this.invisible = !this.invisible;
+    } else {
+      this.invulnerableBlinkTime -= deltaTime;
+    }
+
+    if (this.invulnerableTime <= 0) {
+      this.invulnerableTime = this.invulnerableMaxTime;
+      this.invulnerable = false;
+      this.invisible = false;
+      this.game.newLiveInProgress = false;
+    } else {
+      this.invulnerableTime -= deltaTime;
+    }
+  }
+  
+  resetShip() {
+    this.frameX = 0;
+    this.frameY = 0;
+    this.maxFrame = 1;
+    this.x = this.game.width * 0.5 - this.width * 0.5;
+    this.y = this.game.height - this.height - 50;
+
+    this.invulnerable = true;
+    this.invisible = true;
+    this.invulnerableBlinkTime = this.invulnerableBlinkMaxTime;
+    this.invulnerableTime = this.invulnerableMaxTime;    
   }
 }
