@@ -9,11 +9,11 @@ export class EnemySpawner {
   }
 
   spawnEnemy() {
-    this.level = this.levels[this.game.level]
+    this.level = this.levels[this.game.level - 1]
     this.lastTime = this.game.levelTimer;
-    levels[this.game.level].forEach((enemyPack, index) => {
-      if (this.lastTime > enemyPack.time && !enemyPack.spawned) {
-        enemyPack.spawned = true;
+    levels[this.game.level - 1].waves.forEach((enemyPack, index) => {
+      if (this.lastTime > enemyPack.time && !enemyPack.startSpawn) {
+        enemyPack.startSpawn = true;
         this.game.wave = index;
         const x = Math.random();
 
@@ -22,19 +22,29 @@ export class EnemySpawner {
             this.game.enemies.push(this.createNewEnemy(enemyPack, x));
           }, i * enemyPack.enemyDelay)
         }
+        
+        setTimeout(() => {
+          enemyPack.spawned = true;
+        }, enemyPack.number * enemyPack.enemyDelay)
       }
+      
+      console.log('this.game.enemies.length: ', this.game.enemies.length)
       
       /** Check if level complete */
       if (
-        this.level[this.level.length - 1].spawned
-        && this.game.wave === this.level.length - 1
+        this.level.waves[this.level.waves.length - 1].spawned
+        && this.game.wave === this.level.waves.length - 1
         && this.game.enemies.length === 0
-        && this.levels[this.game.level + 1]
       ) {
+        /** Check if game complete */
+        if (this.levels[this.game.level]) {
           this.game.lives++;
           this.game.level++;
           this.game.wave = 0;
           this.game.levelTimer = 0;
+        } else {
+          this.game.gameCompleted = true;          
+        }
       }
     })    
   }
@@ -66,24 +76,27 @@ export class EnemySpawner {
   }
 
   rollBackWaves() {
-    const currentLevel = this.levels[this.game.level]
+    const currentLevel = this.levels[this.game.level - 1]
     const currentPackIndex = currentLevel
+      .waves
       .findIndex((enemyPack) => enemyPack.spawned === false)
 
     let newIndex = currentPackIndex >= this.game.rollBackWavesNumber
                      ? currentPackIndex - this.game.rollBackWavesNumber
                      : 0;
     
-    this.game.levelTimer = currentLevel[newIndex].time - this.game.delayAfterDeath;
+    this.game.levelTimer = currentLevel.waves[newIndex].time - this.game.delayAfterDeath;
        
     for (let i = newIndex; i < newIndex + this.game.rollBackWavesNumber; i++ ) {
-      currentLevel[i].spawned = false;
+      currentLevel.waves[i].spawned = false;
+      currentLevel.waves[i].startSpawn = false;
     }
   }
   
   resetLevels() {
     for (let i = 0; i < this.levels.length; i++) {
-      this.levels[i].forEach(enemyPack => enemyPack.spawned = false);
+      this.levels[i].waves.forEach(enemyPack => enemyPack.spawned = false);
+      this.levels[i].waves.forEach(enemyPack => enemyPack.startSpawn = false);
     }
   }
 }

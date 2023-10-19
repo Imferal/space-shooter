@@ -1,6 +1,9 @@
+import { levels } from '../levels/levels.js';
+
 export class UI {
   constructor(game) {
     this.game = game;
+    this.levels = levels;
     this.fontSize = 20;
     this.fontFamily = 'PressStart';
     this.fontColor = 'white';
@@ -43,7 +46,7 @@ export class UI {
 
     /** Level */
     context.font = this.fontSize * 0.5 + 'px ' + this.fontFamily;
-    context.fillText('Level: ' + (this.game.level + 1), 20, this.game.height - 20);
+    context.fillText('Level: ' + (this.game.level), 20, this.game.height - 20);
 
     /** Wave */
     context.font = this.fontSize * 0.5 + 'px ' + this.fontFamily;
@@ -58,7 +61,68 @@ export class UI {
       if (this.isBlinkingTextVisible) {
         context.fillStyle = 'yellow';
         context.font = this.fontSize * 0.8 + 'px ' + this.fontFamily;
-        context.fillText('Press Space to Start', this.game.width * 0.5, this.game.height * 0.5 + 20);
+        context.fillText(
+          'Press Space to Start...',
+          this.game.width * 0.5,
+          this.game.height * 0.5 + 60,
+        );
+      }
+    }
+
+    /** Game Completed */
+    if (this.game.gameCompleted) {
+      context.fillStyle = 'green';
+      context.textAlign = 'center';
+      context.font = this.fontSize * 1.6 + 'px ' + this.fontFamily;
+      context.fillText(
+        'Congratulations!',
+        this.game.width * 0.5,
+        this.game.height * 0.5 - 70
+      );
+      context.fillStyle = 'white';
+      context.font = this.fontSize + 'px ' + this.fontFamily;
+      context.fillText(
+        'You have successfully',
+        this.game.width * 0.5,
+        this.game.height * 0.5 - 20
+      );
+      context.fillText(
+        'defended the galaxy',
+        this.game.width * 0.5,
+        this.game.height * 0.5 + 10
+      );
+      context.fillText(
+        'from space invaders!',
+        this.game.width * 0.5,
+        this.game.height * 0.5 + 40
+      );
+      if (this.isBlinkingTextVisible) {
+        context.fillStyle = 'yellow';
+        context.font = this.fontSize * 0.8 + 'px ' + this.fontFamily;
+        context.fillText(
+          'Press Space to Start New Game...',
+          this.game.width * 0.5,
+          this.game.height * 0.5 + 90
+        );
+      }
+    }
+    
+    /** New Level Message*/
+    if (this.game.levelTimer < 5000) {      
+      context.textAlign = 'center';
+      context.font = this.fontSize * 2 + 'px ' + this.fontFamily;
+      context.fillStyle = 'red';
+      context.fillText(
+        this.levels[this.game.level - 1].text.header,
+        this.game.width * 0.5,
+        this.game.height * 0.5 - 100);
+      context.font = this.fontSize * 0.7 + 'px ' + this.fontFamily;
+      context.fillStyle = 'yellowgreen';
+      if (this.levels[this.game.level - 1].text.subHeader) {
+        context.fillText(
+          this.levels[this.game.level - 1].text.subHeader,
+          this.game.width * 0.5,
+          this.game.height * 0.5 + 10);
       }
     }
 

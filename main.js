@@ -39,7 +39,7 @@ window.addEventListener('load', () => {
       this.levelTimer = 0;
       this.delayAfterDeath = 3000;
       this.rollBackWavesNumber = 1;
-      this.level = 0;
+      this.level = 1;
       this.wave = 0;
 
       this.newLiveInProgress = true;
@@ -47,6 +47,7 @@ window.addEventListener('load', () => {
       this.gameOverDelay = this.gameOverMaxDelay;
       this.gameOverInProgress = false;
       this.gameOver = false;
+      this.gameCompleted = false;
 
       /** Инициализация первичного состояния */
       this.ship.currentState = this.ship.states[0];
@@ -71,7 +72,7 @@ window.addEventListener('load', () => {
       this.background.update();
 
       /** Enemies */
-      this.enemySpawner.spawnEnemy()
+      if (!this.gameOver) this.enemySpawner.spawnEnemy()
       this.enemies.forEach(enemy => {
         enemy.update(deltaTime);
       });
@@ -147,6 +148,7 @@ window.addEventListener('load', () => {
 
     resetGame() {
       this.gameOver = false;
+      this.gameCompleted = false;
       this.gameOverInProgress = false;
       
       this.enemies = [];
@@ -155,7 +157,7 @@ window.addEventListener('load', () => {
       this.explosions = [];
       this.lives = this.maxLives;
       this.gameOverDelay = this.gameOverMaxDelay;
-      this.level = 0;
+      this.level = 1;
       this.wave = 0;
       this.score = 0;
       this.levelTimer = 0;
