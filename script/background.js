@@ -4,13 +4,13 @@ export class Background {
     this.width = 600;
     this.height = 2400;
 
-    this.coffee_layer1 = document.getElementById('coffee_layer1');
-    this.coffee_layer2 = document.getElementById('coffee_layer2');
-    this.coffee_layer3 = document.getElementById('coffee_layer3');
+    this.background_layer1 = document.getElementById('background_stars' + this.game.level);
+    this.background_layer2 = document.getElementById('background_dust' + this.game.level);
+    this.background_layer3 = document.getElementById('background_planets' + this.game.level);
 
-    this.layer1 = new Layer(this.game, this.width, this.height, 0.1, this.coffee_layer1)
-    this.layer2 = new Layer(this.game, this.width, this.height, 0.12, this.coffee_layer2)
-    this.layer3 = new Layer(this.game, this.width, this.height, 0.2, this.coffee_layer3)
+    this.layer1 = new Layer(this.game, this.width, this.height, 0.1, this.background_layer1)
+    this.layer2 = new Layer(this.game, this.width, this.height, 0.12, this.background_layer2)
+    this.layer3 = new Layer(this.game, this.width, this.height, 0.2, this.background_layer3)
 
     this.backgroundLayers = [
       this.layer1,
@@ -26,9 +26,11 @@ export class Background {
   }
 
   draw(context) {
-    this.backgroundLayers.forEach(layer => {
-      layer.draw(context);
-    })
+    if (this.game.levelTimer > 2000) {
+      this.backgroundLayers.forEach(layer => {
+        layer.draw(context);
+      });
+    }
   }
 }
 

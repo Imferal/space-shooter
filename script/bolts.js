@@ -1,4 +1,5 @@
-import {Explosion} from './explosion.js';
+import { FloatingMessage } from './floatingMessages.js';
+import {BoltTrack, ShipExplosion} from './particles.js';
 
 class Bolt {
   constructor() {
@@ -66,17 +67,38 @@ class Bolt {
         ) {
           this.markedForDeletion = true;
           enemy.lives--;
-          this.game.explosions.push(
-            new Explosion(
+
+          this.game.particles.unshift(
+            new ShipExplosion(
               this.game,
-              enemy.x + enemy.width * 0.5,
-              enemy.y + enemy.height * 0.5,
-              enemy.explosionSize,
+              this.x + this.width * 0.5,
+              enemy.y + enemy.height,
+              enemy.width / 2,
             ),
           );
+          
           if (enemy.lives <= 0) {
             enemy.markedForDeletion = true;
             this.game.score += enemy.score;
+
+            this.game.particles.unshift(
+              new ShipExplosion(
+                this.game,
+                enemy.x + enemy.width * 0.5,
+                enemy.y + enemy.height * 0.5,
+                enemy.width * 2,
+              ),
+            );
+
+            this.game.floatingMessages.push(
+              new FloatingMessage(
+                enemy.score,
+                enemy.x,
+                enemy.y,
+                150,
+                50,
+              )
+            )
           }
         }
     })
@@ -108,6 +130,11 @@ export class BasicBolt extends Bolt {
   }
 
   update(deltaTime) {
+    this.game.particles.unshift(new BoltTrack(
+      this.game,
+      this.x + this.width * 0.5,
+      this.y + this.height * 0.7,
+    ))
     super.update(deltaTime);
   }
 

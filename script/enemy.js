@@ -179,7 +179,7 @@ export class EnemyMedium extends Enemy {
     this.maxFrame = 1;
     this.image = document.getElementById('enemyMedium');
     this.shootTimer = Math.random() * this.shotCooldown;
-    this.explosionSize = 4;
+    this.explosionSize = 3;
     this.lives = 3;
     this.score = 20;
 
@@ -214,7 +214,7 @@ export class EnemyBig extends Enemy {
     this.maxFrame = 1;
     this.image = document.getElementById('enemyBig');
     this.shootTimer = Math.random() * this.shotCooldown;
-    this.explosionSize = 8;
+    this.explosionSize = 4;
     this.lives = 20;
     this.score = 100;
 

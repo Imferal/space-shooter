@@ -12,8 +12,12 @@ export class InputHandler {
 
     window.addEventListener('keypress', e => {
       if (e.code === 'Space') {
-        if (!this.game.gameOver && !this.game.gameCompleted) this.game.ship.shot = true;
+        if (!this.game.gameOver) this.game.ship.shot = true;
         else this.game.resetGame();
+      }
+
+      if (e.code === 'Enter') {
+        this.game.resetGame();
       }
     })
 

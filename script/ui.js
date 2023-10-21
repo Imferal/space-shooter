@@ -62,7 +62,7 @@ export class UI {
         context.fillStyle = 'yellow';
         context.font = this.fontSize * 0.8 + 'px ' + this.fontFamily;
         context.fillText(
-          'Press Space to Start...',
+          'Press "Space" to Start...',
           this.game.width * 0.5,
           this.game.height * 0.5 + 60,
         );
@@ -100,7 +100,7 @@ export class UI {
         context.fillStyle = 'yellow';
         context.font = this.fontSize * 0.8 + 'px ' + this.fontFamily;
         context.fillText(
-          'Press Space to Start New Game...',
+          'Press "Enter" to Start New Game...',
           this.game.width * 0.5,
           this.game.height * 0.5 + 90
         );

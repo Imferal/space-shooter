@@ -27,9 +27,7 @@ export class EnemySpawner {
           enemyPack.spawned = true;
         }, enemyPack.number * enemyPack.enemyDelay)
       }
-      
-      console.log('this.game.enemies.length: ', this.game.enemies.length)
-      
+
       /** Check if level complete */
       if (
         this.level.waves[this.level.waves.length - 1].spawned
@@ -38,10 +36,7 @@ export class EnemySpawner {
       ) {
         /** Check if game complete */
         if (this.levels[this.game.level]) {
-          this.game.lives++;
-          this.game.level++;
-          this.game.wave = 0;
-          this.game.levelTimer = 0;
+          this.game.setNewLevel()
         } else {
           this.game.gameCompleted = true;          
         }

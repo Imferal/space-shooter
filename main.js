@@ -3,7 +3,7 @@ import { InputHandler } from './script/input.js';
 import { Background } from './script/background.js';
 import { UI } from './script/ui.js';
 import { EnemySpawner } from './script/enemySpawner.js';
-import {Stop} from './script/shipStates.js';
+import { Stop } from './script/shipStates.js';
 
 window.addEventListener('load', () => {
   const canvas = document.getElementById('canvas');
@@ -17,23 +17,19 @@ window.addEventListener('load', () => {
       this.width = width;
       this.height = height;
 
-      this.background = new Background(this);
-      this.ship = new Ship(this);
-      this.input = new InputHandler(this);
-      this.ui = new UI(this);
-      this.enemySpawner = new EnemySpawner(this);
-
       this.enemies = [];
       this.bolts = [];
       this.enemyBolts = [];
-      this.explosions = [];
+      this.floatingMessages = [];
+      this.particles = [];
 
       this.speed = 12;
       this.maxSpeed = 12;
       this.gameOver = false;
       this.debug = false;
+      this.maxParticles = 500;
 
-      this.maxLives = 3;
+      this.maxLives = 15;
       this.lives = this.maxLives;
       this.score = 0;
       this.levelTimer = 0;
@@ -48,6 +44,12 @@ window.addEventListener('load', () => {
       this.gameOverInProgress = false;
       this.gameOver = false;
       this.gameCompleted = false;
+
+      this.background = new Background(this);
+      this.ship = new Ship(this);
+      this.input = new InputHandler(this);
+      this.ui = new UI(this);
+      this.enemySpawner = new EnemySpawner(this);
 
       /** Инициализация первичного состояния */
       this.ship.currentState = this.ship.states[0];
@@ -80,13 +82,28 @@ window.addEventListener('load', () => {
         enemy => !enemy.markedForDeletion,
       );
 
-      /** Explosions */
-      this.explosions.forEach(explosion => {
-        explosion.update(deltaTime);
-      });
-      this.explosions = this.explosions.filter(
-        explosion => !explosion.markedForDeletion,
-      );
+      /** Particles */
+      this.particles.forEach((particle, index) => {
+        particle.update();
+      })
+      this.particles = this.particles.filter(
+        particle => !particle.markedForDeletion
+      )
+      
+      console.log(this.particles.length)
+
+      /** Particles Limit */
+      if (this.particles.length > this.maxParticles) {
+        this.particles.length = this.maxParticles;
+      }
+
+      /** Floating Messages */
+      this.floatingMessages.forEach((message, index) => {
+        message.update();
+      })
+      this.floatingMessages = this.floatingMessages.filter(
+        message => !message.markedForDeletion
+      )
 
       if (!this.gameOver) {
         /** Ship */
@@ -122,10 +139,15 @@ window.addEventListener('load', () => {
         enemy.draw(context);
       });
 
-      /** Explosions */
-      this.explosions.forEach(explosion => {
-        explosion.draw(context);
-      });
+      /** Particles */
+      this.particles.forEach(particle => {
+        particle.draw(context);
+      })
+
+      /** Floating Messages */
+      this.floatingMessages.forEach(message => {
+        message.draw(context);
+      })
 
       if (!this.gameOver) {
         /** Ship */
@@ -162,12 +184,21 @@ window.addEventListener('load', () => {
       this.score = 0;
       this.levelTimer = 0;
       this.enemySpawner.resetLevels()
+      this.background = new Background(this);
     }
     
     createNewShip(){
       this.ship.resetShip();
       this.ship.currentState = new Stop(this);
       this.newLiveInProgress = true;
+    }
+    
+    setNewLevel() {
+      this.lives++;
+      this.level++;
+      this.wave = 0;
+      this.levelTimer = 0;
+      this.background = new Background(this);
     }
   }
 

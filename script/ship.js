@@ -9,8 +9,8 @@ import {
   DownLeft,
   LeftUp,
 } from './shipStates.js';
-import {BasicBolt} from './bolts.js';
-import {Explosion} from './explosion.js';
+import { BasicBolt } from './bolts.js';
+import { ShipExplosion } from './particles.js';
 
 export class Ship {
   constructor(game) {
@@ -47,6 +47,7 @@ export class Ship {
   }
 
   update(input, deltaTime) {
+
     this.currentState.handleInput(input);
     /** Movement */
     this.x += this.vx;
@@ -166,14 +167,7 @@ export class Ship {
         enemy.y + enemy.height > this.y
       ) {
         enemy.markedForDeletion = true;
-        this.game.explosions.push(
-          new Explosion(
-            this.game,
-            enemy.x + enemy.width * 0.5,
-            enemy.y + enemy.height * 0.5,
-            enemy.explosionSize,
-          ),
-        );
+
         this.collisionHandler(deltaTime)
       }
     })
@@ -183,14 +177,16 @@ export class Ship {
     this.markedForDeletion = true;
     this.game.enemies = [];
     this.game.enemyBolts = [];
-    this.game.explosions.push(
-      new Explosion(
+
+    this.game.particles.unshift(
+      new ShipExplosion(        
         this.game,
-        this.game.ship.x + this.game.ship.width * 0.5,
-        this.game.ship.y + this.game.ship.height * 0.5,
-        this.game.ship.explosionSize,
+        this.x + this.width * 0.5,
+        this.y + this.height * 0.5,
+        this.width * 4,
       ),
     );
+    
     this.game.lives--;
     if (this.game.lives <= 0) {
       this.game.gameOver = true;
