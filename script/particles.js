@@ -44,7 +44,6 @@ export class ShipExplosion extends Particle {
   constructor(game, x, y, size) {
     super(game);
     this.particleCount = 30;
-    this.particles = [];
     this.size = size / 8
 
     for (let i = 0; i < this.particleCount; i++) {
@@ -54,26 +53,26 @@ export class ShipExplosion extends Particle {
       particle.speedX = (Math.random() - 0.5) * 5;
       particle.speedY = (Math.random() - 0.5) * 5;
       particle.size = Math.random() * this.size + this.size;
-      this.particles.push(particle);
+      this.game.explosionParticles.push(particle);
     }
   }
 
   update() {
-    for (let i = this.particles.length - 1; i >= 0; i--) {
-      const particle = this.particles[i];
+    for (let i = this.game.explosionParticles.length - 1; i >= 0; i--) {
+      const particle = this.game.explosionParticles[i];
       particle.update();
       if (particle.markedForDeletion) {
-        this.particles.splice(i, 1);
+        this.game.explosionParticles.splice(i, 1);
       }
     }
 
-    if (this.particles.length === 0) {
+    if (this.game.explosionParticles.length === 0) {
       this.markedForDeletion = true;
     }
   }
 
   draw(context) {
-    this.particles.forEach(particle => {
+    this.game.explosionParticles.forEach(particle => {
       context.beginPath();
       context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
       context.fillStyle = particle.color;

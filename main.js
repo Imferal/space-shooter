@@ -22,6 +22,7 @@ window.addEventListener('load', () => {
       this.enemyBolts = [];
       this.floatingMessages = [];
       this.particles = [];
+      this.explosionParticles = [];
 
       this.speed = 12;
       this.maxSpeed = 12;
@@ -29,7 +30,7 @@ window.addEventListener('load', () => {
       this.debug = false;
       this.maxParticles = 500;
 
-      this.maxLives = 15;
+      this.maxLives = 10;
       this.lives = this.maxLives;
       this.score = 0;
       this.levelTimer = 0;
@@ -83,14 +84,12 @@ window.addEventListener('load', () => {
       );
 
       /** Particles */
-      this.particles.forEach((particle, index) => {
+      this.particles.forEach((particle) => {
         particle.update();
       })
       this.particles = this.particles.filter(
         particle => !particle.markedForDeletion
       )
-      
-      console.log(this.particles.length)
 
       /** Particles Limit */
       if (this.particles.length > this.maxParticles) {
@@ -98,7 +97,7 @@ window.addEventListener('load', () => {
       }
 
       /** Floating Messages */
-      this.floatingMessages.forEach((message, index) => {
+      this.floatingMessages.forEach((message) => {
         message.update();
       })
       this.floatingMessages = this.floatingMessages.filter(

@@ -158,7 +158,7 @@ export class EnemyBasicBolt extends Bolt {
     this.x = this.enemy.x + this.enemy.width / 2 - this.width / 2;
     this.y = this.enemy.y + this.height;
     this.maxFrame = 1;
-    this.speedY = -15;
+    this.speedY = -12;
     this.enemyBolt = true;
   }
 

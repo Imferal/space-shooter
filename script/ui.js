@@ -108,7 +108,7 @@ export class UI {
     }
     
     /** New Level Message*/
-    if (this.game.levelTimer < 5000) {      
+    if (!this.game.gameOver && !this.game.gameCompleted && this.game.levelTimer < 5000) {      
       context.textAlign = 'center';
       context.font = this.fontSize * 2 + 'px ' + this.fontFamily;
       context.fillStyle = 'red';
@@ -128,13 +128,14 @@ export class UI {
 
     /** Debug Information */
     if (this.game.debug) {
+      context.textAlign = 'left';
       context.fillStyle = 'green';
       context.font = 10 + 'px ' + this.fontFamily;
-      context.fillText('Enemies: ' + this.game.enemies.length, 20, this.game.height - 20);
-      context.fillText('Bolts: ' + this.game.bolts.length, 20, this.game.height - 40);
-      context.fillText('EnemyBolts: ' + this.game.enemyBolts.length, 20, this.game.height - 60);
-      context.fillText('Explosions: ' + this.game.explosions.length, 20, this.game.height - 80);
-      context.fillText('GameTimer: ' + this.game.levelTimer, 20, this.game.height - 100);
+      context.fillText('Enemies: ' + this.game.enemies.length, 20, this.game.height - 120);
+      context.fillText('Bolts: ' + this.game.bolts.length, 20, this.game.height - 140);
+      context.fillText('EnemyBolts: ' + this.game.enemyBolts.length, 20, this.game.height - 160);
+      context.fillText('Explosions: ' + this.game.explosionParticles.length, 20, this.game.height - 180);
+      context.fillText('LevelTimer: ' + this.game.levelTimer, 20, this.game.height - 200);
     }
   }
 }
