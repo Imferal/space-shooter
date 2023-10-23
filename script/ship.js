@@ -15,20 +15,20 @@ import { ShipExplosion } from './particles.js';
 export class Ship {
   constructor(game) {
     this.game = game;
-
     this.image = document.getElementById('ship');
     this.vy = 0;
     this.vx = 0;
     this.maxSpeed = 14;
     this.width = 64;
     this.height = 96;
-    this.explosionSize = 5;
     this.fps = 20;
     this.frameInterval = 1000 / this.fps;
     this.frameTimer = 0;
     this.shot = false;
     this.invulnerableBlinkMaxTime = 200;
     this.invulnerableMaxTime = 2400;
+    this.invulnerable = false;
+    this.invisible = false;
     
     this.resetShip()
 

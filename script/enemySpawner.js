@@ -1,6 +1,7 @@
 import { EnemyBig, EnemyMedium, EnemySmall } from './enemy.js';
 import { levels } from '../levels/levels.js';
 
+
 export class EnemySpawner {
   constructor(game) {
     this.game = game;
@@ -33,6 +34,7 @@ export class EnemySpawner {
         this.level.waves[this.level.waves.length - 1].spawned
         && this.game.wave === this.level.waves.length - 1
         && this.game.enemies.length === 0
+        && !this.game.ship.invulnerable
       ) {
         /** Check if game complete */
         if (this.levels[this.game.level]) {
@@ -82,7 +84,7 @@ export class EnemySpawner {
     
     this.game.levelTimer = currentLevel.waves[newIndex].time - this.game.delayAfterDeath;
        
-    for (let i = newIndex; i < newIndex + this.game.rollBackWavesNumber; i++ ) {
+    for (let i = newIndex; i < currentLevel.waves.length; i++ ) {
       currentLevel.waves[i].spawned = false;
       currentLevel.waves[i].startSpawn = false;
     }
