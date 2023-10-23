@@ -1,0 +1,32 @@
+@font-face {
+    font-family: PressStart;
+    src: url(font/PressStart2P-Regular.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: PressStart, Helvetica, monospace;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+}
+
+#canvas {
+    border: 5px solid black;
+    background: black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 100%;
+}
+
+img {
+    display: none;
+}
